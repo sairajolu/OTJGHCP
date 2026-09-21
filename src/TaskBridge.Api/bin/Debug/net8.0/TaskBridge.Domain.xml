@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TaskBridge.Domain</name>
+    </assembly>
+    <members>
+        <member name="T:TaskBridge.Domain.Entities.AuditEntry">
+            <summary>Represents an immutable tenant-scoped audit entry.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.Id">
+            <summary>Gets the audit entry identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.EventId">
+            <summary>Gets the idempotency event identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.EventType">
+            <summary>Gets the event type.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.EntityType">
+            <summary>Gets the audited entity type.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.EntityId">
+            <summary>Gets the audited entity identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.ActorUserId">
+            <summary>Gets the actor identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.OrganisationId">
+            <summary>Gets the owning organisation identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.ActorIpAddress">
+            <summary>Gets the actor IP address captured from trusted server context.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.PreviousState">
+            <summary>Gets the previous state as redacted JSON.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.NewState">
+            <summary>Gets the new state as redacted JSON.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.TimestampUtc">
+            <summary>Gets the event timestamp in UTC.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.ProjectId">
+            <summary>Gets the related project identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.MilestoneId">
+            <summary>Gets the related milestone identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.CorrelationId">
+            <summary>Gets the correlation identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.AuditEntry.CreatedAtUtc">
+            <summary>Gets the persistence creation timestamp in UTC.</summary>
+        </member>
+        <member name="M:TaskBridge.Domain.Entities.AuditEntry.Create(System.Guid,TaskBridge.Domain.Enums.MilestoneEventType,System.String,System.Guid,System.Guid,System.Guid,System.String,System.String,System.String,System.DateTime,System.Guid,System.Nullable{System.Guid},System.String,System.DateTime)">
+            <summary>Creates an immutable audit entry.</summary>
+        </member>
+        <member name="T:TaskBridge.Domain.Entities.Notification">
+            <summary>Represents an immutable-content tenant notification.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.Id">
+            <summary>Gets the notification identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.EventId">
+            <summary>Gets the idempotency event identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.RecipientUserId">
+            <summary>Gets the recipient user identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.OrganisationId">
+            <summary>Gets the owning organisation identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.EventType">
+            <summary>Gets the event type.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.ProjectId">
+            <summary>Gets the related project identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.MilestoneId">
+            <summary>Gets the related milestone identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.Title">
+            <summary>Gets the notification title.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.Message">
+            <summary>Gets the notification message.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.IsRead">
+            <summary>Gets whether the notification has been read.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.CreatedAtUtc">
+            <summary>Gets the creation timestamp in UTC.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Notification.ReadAtUtc">
+            <summary>Gets the read timestamp in UTC, when applicable.</summary>
+        </member>
+        <member name="M:TaskBridge.Domain.Entities.Notification.Create(System.Guid,System.Guid,System.Guid,TaskBridge.Domain.Enums.MilestoneEventType,System.Guid,System.Nullable{System.Guid},System.String,System.String,System.DateTime)">
+            <summary>Creates a notification with immutable content.</summary>
+        </member>
+        <member name="M:TaskBridge.Domain.Entities.Notification.MarkAsRead(System.DateTime)">
+            <summary>Marks the notification as read at the supplied UTC timestamp.</summary>
+        </member>
+        <member name="T:TaskBridge.Domain.Entities.Project">
+            <summary>
+            Represents a project owned by an organisation and assigned to a team.
+            </summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Project.Id">
+            <summary>Gets the project identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Project.OrganisationId">
+            <summary>Gets the organisation that owns the project.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Project.TeamId">
+            <summary>Gets the team assigned to the project.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Project.Name">
+            <summary>Gets the project name.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Project.Description">
+            <summary>Gets the optional project description.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Project.Status">
+            <summary>Gets the current project status.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Project.CreatedAtUtc">
+            <summary>Gets the creation timestamp in UTC.</summary>
+        </member>
+        <member name="P:TaskBridge.Domain.Entities.Project.UpdatedAtUtc">
+            <summary>Gets the last update timestamp in UTC.</summary>
+        </member>
+        <member name="M:TaskBridge.Domain.Entities.Project.Create(System.Guid,System.Guid,System.String,System.String,System.DateTime)">
+            <summary>Creates a new project in draft status.</summary>
+        </member>
+        <member name="M:TaskBridge.Domain.Entities.Project.UpdateStatus(TaskBridge.Domain.Entities.ProjectStatus,System.DateTime)">
+            <summary>Updates the project status and modification timestamp.</summary>
+        </member>
+        <member name="T:TaskBridge.Domain.Entities.ProjectStatus">
+            <summary>Defines the lifecycle states available to a project.</summary>
+        </member>
+        <member name="T:TaskBridge.Domain.Enums.MilestoneEventType">
+            <summary>Identifies a milestone lifecycle event.</summary>
+        </member>
+        <member name="F:TaskBridge.Domain.Enums.MilestoneEventType.MilestoneCreated">
+            <summary>A milestone was created.</summary>
+        </member>
+        <member name="F:TaskBridge.Domain.Enums.MilestoneEventType.MilestoneUpdated">
+            <summary>A milestone was updated.</summary>
+        </member>
+        <member name="F:TaskBridge.Domain.Enums.MilestoneEventType.MilestoneDeleted">
+            <summary>A milestone was deleted.</summary>
+        </member>
+        <member name="F:TaskBridge.Domain.Enums.MilestoneEventType.MilestoneReopened">
+            <summary>A milestone was reopened.</summary>
+        </member>
+    </members>
+</doc>

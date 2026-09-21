@@ -1,0 +1,14 @@
+/workspaces/OTJGHCP/src/TaskBridge.Domain/bin/Debug/net8.0/TaskBridge.Domain.deps.json
+/workspaces/OTJGHCP/src/TaskBridge.Domain/bin/Debug/net8.0/TaskBridge.Domain.dll
+/workspaces/OTJGHCP/src/TaskBridge.Domain/bin/Debug/net8.0/TaskBridge.Domain.pdb
+/workspaces/OTJGHCP/src/TaskBridge.Domain/obj/Debug/net8.0/TaskBridge.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/OTJGHCP/src/TaskBridge.Domain/obj/Debug/net8.0/TaskBridge.Domain.AssemblyInfoInputs.cache
+/workspaces/OTJGHCP/src/TaskBridge.Domain/obj/Debug/net8.0/TaskBridge.Domain.AssemblyInfo.cs
+/workspaces/OTJGHCP/src/TaskBridge.Domain/obj/Debug/net8.0/TaskBridge.Domain.csproj.CoreCompileInputs.cache
+/workspaces/OTJGHCP/src/TaskBridge.Domain/obj/Debug/net8.0/TaskBridge.Domain.sourcelink.json
+/workspaces/OTJGHCP/src/TaskBridge.Domain/obj/Debug/net8.0/TaskBridge.Domain.dll
+/workspaces/OTJGHCP/src/TaskBridge.Domain/obj/Debug/net8.0/refint/TaskBridge.Domain.dll
+/workspaces/OTJGHCP/src/TaskBridge.Domain/obj/Debug/net8.0/TaskBridge.Domain.pdb
+/workspaces/OTJGHCP/src/TaskBridge.Domain/obj/Debug/net8.0/ref/TaskBridge.Domain.dll
+/workspaces/OTJGHCP/src/TaskBridge.Domain/bin/Debug/net8.0/TaskBridge.Domain.xml
+/workspaces/OTJGHCP/src/TaskBridge.Domain/obj/Debug/net8.0/TaskBridge.Domain.xml

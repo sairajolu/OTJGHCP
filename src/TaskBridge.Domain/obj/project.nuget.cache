@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "43eLkgVbPdA=",
+  "success": true,
+  "projectFilePath": "/workspaces/OTJGHCP/src/TaskBridge.Domain/TaskBridge.Domain.csproj",
+  "expectedPackageFiles": [
+    "/home/codespace/.nuget/packages/microsoft.netcore.app.ref/8.0.30/microsoft.netcore.app.ref.8.0.30.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.30/microsoft.aspnetcore.app.ref.8.0.30.nupkg.sha512"
+  ],
+  "logs": []
+}

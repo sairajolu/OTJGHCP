@@ -1,0 +1,634 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TaskBridge.Application</name>
+    </assembly>
+    <members>
+        <member name="T:TaskBridge.Application.Abstractions.IAuditEntryRepository">
+            <summary>Provides append-only, organisation-scoped audit persistence.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.IAuditEntryRepository.AddAsync(TaskBridge.Domain.Entities.AuditEntry,System.Threading.CancellationToken)">
+            <summary>Stages a new audit entry for insertion.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.IAuditEntryRepository.ExistsByEventIdAsync(System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <summary>Checks whether an event has already been recorded for an organisation.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.IAuditEntryRepository.GetByEventIdAsync(System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <summary>Gets an existing event entry for idempotent processing.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.IAuditEntryRepository.QueryAsync(System.Guid,TaskBridge.Application.Notifications.AuditEntryQuery,System.Threading.CancellationToken)">
+            <summary>Queries audit entries for an organisation-scoped project.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Abstractions.IClock">
+            <summary>Provides the current UTC time to application services.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Abstractions.IClock.UtcNow">
+            <summary>Gets the current UTC timestamp.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Abstractions.ICurrentTenant">
+            <summary>Provides the authenticated organisation and actor for the current request.</summary>
+            <remarks>
+            Retained as a compatibility alias for existing callers. New application
+            code should depend on <see cref="T:TaskBridge.Application.Abstractions.ICurrentUserContext"/>.
+            </remarks>
+        </member>
+        <member name="T:TaskBridge.Application.Abstractions.ICurrentUserContext">
+            <summary>Provides identity from the authenticated request context.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Abstractions.ICurrentUserContext.OrganisationId">
+            <summary>Gets the authenticated organisation identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Abstractions.ICurrentUserContext.UserId">
+            <summary>Gets the authenticated actor identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Abstractions.ICurrentUserContext.ActorIpAddress">
+            <summary>Gets the trusted actor IP address, when available.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Abstractions.INotificationRepository">
+            <summary>Provides organisation- and recipient-scoped notification persistence.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.INotificationRepository.AddAsync(TaskBridge.Domain.Entities.Notification,System.Threading.CancellationToken)">
+            <summary>Stages a notification for insertion.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.INotificationRepository.ExistsByEventIdAndRecipientAsync(System.Guid,System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <summary>Checks whether a recipient already received an event.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.INotificationRepository.QueryAsync(System.Guid,System.Guid,TaskBridge.Application.Notifications.NotificationQuery,System.Threading.CancellationToken)">
+            <summary>Queries notifications for a recipient within an organisation.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.INotificationRepository.GetForRecipientAsync(System.Guid,System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <summary>Gets a notification owned by the specified recipient and organisation.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Abstractions.IProjectRepository">
+            <summary>Provides organisation-scoped persistence operations for projects.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.IProjectRepository.AddAsync(TaskBridge.Domain.Entities.Project,System.Threading.CancellationToken)">
+            <summary>Adds a project to the current unit of work.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.IProjectRepository.GetByIdAsync(System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <summary>Gets a tracked project in the specified organisation.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.IProjectRepository.GetByTeamAsync(System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <summary>Gets projects for a team within the specified organisation.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.IProjectRepository.Remove(TaskBridge.Domain.Entities.Project)">
+            <summary>Removes a project from the current unit of work.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.IProjectRepository.SaveChangesAsync(System.Threading.CancellationToken)">
+            <summary>Commits the current unit of work.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Abstractions.IUnitOfWork">
+            <summary>Commits the current application transaction.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Abstractions.IUnitOfWork.SaveChangesAsync(System.Threading.CancellationToken)">
+            <summary>Commits staged changes asynchronously.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Exceptions.InvalidAuditDateRangeException">
+            <summary>Indicates that an audit date range is invalid.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Exceptions.InvalidAuditDateRangeException.#ctor">
+            <summary>Initializes the exception for an invalid date range.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Exceptions.InvalidProjectStatusTransitionException">
+            <summary>Indicates that a requested project status transition is not allowed.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Exceptions.InvalidProjectStatusTransitionException.#ctor(TaskBridge.Domain.Entities.ProjectStatus,TaskBridge.Domain.Entities.ProjectStatus)">
+            <summary>Initializes the exception for the rejected transition.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Exceptions.InvalidProjectStatusTransitionException.CurrentStatus">
+            <summary>Gets the current project status.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Exceptions.InvalidProjectStatusTransitionException.RequestedStatus">
+            <summary>Gets the requested project status.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Exceptions.NotificationAccessDeniedException">
+            <summary>Indicates that a user attempted to access another user's notifications.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Exceptions.NotificationAccessDeniedException.#ctor">
+            <summary>Initializes the exception for an unauthorized notification access.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Exceptions.NotificationNotFoundException">
+            <summary>Indicates that a notification is unavailable to the current user and organisation.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Exceptions.NotificationNotFoundException.#ctor(System.Guid)">
+            <summary>Initializes the exception for a notification identifier.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Exceptions.ProjectEventHandlerNotConfiguredException">
+            <summary>Indicates that Project event processing is not configured.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Exceptions.ProjectEventHandlerNotConfiguredException.#ctor">
+            <summary>Initializes the configuration exception.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Exceptions.ProjectNotFoundException">
+            <summary>Indicates that a project was not found within the current organisation.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Exceptions.ProjectNotFoundException.#ctor(System.Guid)">
+            <summary>Initializes the exception for the specified project.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Exceptions.TenantContextMismatchException">
+            <summary>Indicates that trusted event tenant data differs from the authenticated tenant.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Exceptions.TenantContextMismatchException.#ctor">
+            <summary>Initializes the exception for a tenant mismatch.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.AuditService">
+            <summary>Coordinates append-only audit persistence and tenant-scoped queries.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.AuditService.#ctor(TaskBridge.Application.Abstractions.IAuditEntryRepository,TaskBridge.Application.Abstractions.ICurrentUserContext,TaskBridge.Application.Abstractions.IClock,Microsoft.Extensions.Logging.ILogger{TaskBridge.Application.Notifications.AuditService})">
+            <summary>Initializes the audit service.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.AuditService.AppendAsync(TaskBridge.Application.Notifications.AuditEntryRequest,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.AuditService.AppendForEventAsync(TaskBridge.Application.Notifications.MilestoneChangedEvent,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.AuditService.GetByProjectAsync(TaskBridge.Application.Notifications.AuditEntryQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.IAuditService">
+            <summary>Provides append-only audit operations.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.IAuditService.AppendAsync(TaskBridge.Application.Notifications.AuditEntryRequest,System.Threading.CancellationToken)">
+            <summary>Stages an audit entry using the authenticated organisation and actor.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.IAuditService.AppendForEventAsync(TaskBridge.Application.Notifications.MilestoneChangedEvent,System.Threading.CancellationToken)">
+            <summary>Stages an audit entry from a trusted milestone event.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.IAuditService.GetByProjectAsync(TaskBridge.Application.Notifications.AuditEntryQuery,System.Threading.CancellationToken)">
+            <summary>Gets tenant-scoped audit entries for a project.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.IMilestoneEventHandler">
+            <summary>Handles trusted milestone events for audit and notification processing.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.IMilestoneEventHandler.HandleAsync(TaskBridge.Application.Notifications.MilestoneChangedEvent,System.Threading.CancellationToken)">
+            <summary>Stages one audit entry and recipient notifications for an event.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.IMilestoneRecipientResolver">
+            <summary>Resolves active team members eligible for milestone notifications.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.IMilestoneRecipientResolver.ResolveAsync(System.Guid,System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <summary>Gets recipients within the supplied organisation.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.INotificationService">
+            <summary>Provides tenant- and recipient-scoped notification operations.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.INotificationService.CreateForRecipientsAsync(TaskBridge.Application.Notifications.MilestoneChangedEvent,System.Collections.Generic.IReadOnlyCollection{System.Guid},System.Threading.CancellationToken)">
+            <summary>Stages notifications for the supplied trusted event recipients.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.INotificationService.GetForUserAsync(System.Guid,TaskBridge.Application.Notifications.NotificationQuery,System.Threading.CancellationToken)">
+            <summary>Gets notifications for the authenticated user.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.INotificationService.MarkAsReadAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>Marks an authenticated user's notification as read.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.MilestoneEventHandler">
+            <summary>Processes milestone events through audit and notification abstractions.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.MilestoneEventHandler.#ctor(TaskBridge.Application.Notifications.IAuditService,TaskBridge.Application.Notifications.INotificationService,TaskBridge.Application.Notifications.IMilestoneRecipientResolver,TaskBridge.Application.Abstractions.ICurrentUserContext,TaskBridge.Application.Abstractions.IUnitOfWork,Microsoft.Extensions.Logging.ILogger{TaskBridge.Application.Notifications.MilestoneEventHandler})">
+            <summary>Initializes the milestone event handler.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.MilestoneEventHandler.HandleAsync(TaskBridge.Application.Notifications.MilestoneChangedEvent,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.MilestoneChangedEvent">
+            <summary>Contains a trusted milestone lifecycle event.</summary>
+            <param name="EventId">The idempotency identifier assigned by the trusted producer.</param>
+            <param name="OrganisationId">The authenticated organisation owning the event.</param>
+            <param name="ActorUserId">The authenticated actor who caused the event.</param>
+            <param name="ActorIpAddress">The optional IP captured from trusted server context.</param>
+            <param name="ProjectId">The tenant-owned project identifier.</param>
+            <param name="TeamId">The tenant-owned team identifier used for recipient resolution.</param>
+            <param name="MilestoneId">The related milestone identifier.</param>
+            <param name="EventType">The milestone lifecycle event type.</param>
+            <param name="PreviousState">The redacted previous state as JSON.</param>
+            <param name="NewState">The redacted new state as JSON.</param>
+            <param name="OccurredAtUtc">The event timestamp in UTC.</param>
+            <param name="CorrelationId">The bounded correlation identifier.</param>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.MilestoneChangedEvent.#ctor(System.Guid,System.Guid,System.Guid,System.String,System.Guid,System.Guid,System.Guid,TaskBridge.Domain.Enums.MilestoneEventType,System.String,System.String,System.DateTime,System.String)">
+            <summary>Contains a trusted milestone lifecycle event.</summary>
+            <param name="EventId">The idempotency identifier assigned by the trusted producer.</param>
+            <param name="OrganisationId">The authenticated organisation owning the event.</param>
+            <param name="ActorUserId">The authenticated actor who caused the event.</param>
+            <param name="ActorIpAddress">The optional IP captured from trusted server context.</param>
+            <param name="ProjectId">The tenant-owned project identifier.</param>
+            <param name="TeamId">The tenant-owned team identifier used for recipient resolution.</param>
+            <param name="MilestoneId">The related milestone identifier.</param>
+            <param name="EventType">The milestone lifecycle event type.</param>
+            <param name="PreviousState">The redacted previous state as JSON.</param>
+            <param name="NewState">The redacted new state as JSON.</param>
+            <param name="OccurredAtUtc">The event timestamp in UTC.</param>
+            <param name="CorrelationId">The bounded correlation identifier.</param>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.EventId">
+            <summary>The idempotency identifier assigned by the trusted producer.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.OrganisationId">
+            <summary>The authenticated organisation owning the event.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.ActorUserId">
+            <summary>The authenticated actor who caused the event.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.ActorIpAddress">
+            <summary>The optional IP captured from trusted server context.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.ProjectId">
+            <summary>The tenant-owned project identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.TeamId">
+            <summary>The tenant-owned team identifier used for recipient resolution.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.MilestoneId">
+            <summary>The related milestone identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.EventType">
+            <summary>The milestone lifecycle event type.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.PreviousState">
+            <summary>The redacted previous state as JSON.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.NewState">
+            <summary>The redacted new state as JSON.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.OccurredAtUtc">
+            <summary>The event timestamp in UTC.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.MilestoneChangedEvent.CorrelationId">
+            <summary>The bounded correlation identifier.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.AuditEntryRequest">
+            <summary>Contains data required to append an audit entry from an authenticated context.</summary>
+            <param name="EventId">The idempotency identifier.</param>
+            <param name="EventType">The audit event type.</param>
+            <param name="EntityType">The bounded audited entity type.</param>
+            <param name="EntityId">The audited entity identifier.</param>
+            <param name="ProjectId">The tenant-owned project identifier.</param>
+            <param name="MilestoneId">The optional related milestone identifier.</param>
+            <param name="PreviousState">The redacted previous state as JSON.</param>
+            <param name="NewState">The redacted new state as JSON.</param>
+            <param name="CorrelationId">The bounded correlation identifier.</param>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.AuditEntryRequest.#ctor(System.Guid,TaskBridge.Domain.Enums.MilestoneEventType,System.String,System.Guid,System.Guid,System.Nullable{System.Guid},System.String,System.String,System.String)">
+            <summary>Contains data required to append an audit entry from an authenticated context.</summary>
+            <param name="EventId">The idempotency identifier.</param>
+            <param name="EventType">The audit event type.</param>
+            <param name="EntityType">The bounded audited entity type.</param>
+            <param name="EntityId">The audited entity identifier.</param>
+            <param name="ProjectId">The tenant-owned project identifier.</param>
+            <param name="MilestoneId">The optional related milestone identifier.</param>
+            <param name="PreviousState">The redacted previous state as JSON.</param>
+            <param name="NewState">The redacted new state as JSON.</param>
+            <param name="CorrelationId">The bounded correlation identifier.</param>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryRequest.EventId">
+            <summary>The idempotency identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryRequest.EventType">
+            <summary>The audit event type.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryRequest.EntityType">
+            <summary>The bounded audited entity type.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryRequest.EntityId">
+            <summary>The audited entity identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryRequest.ProjectId">
+            <summary>The tenant-owned project identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryRequest.MilestoneId">
+            <summary>The optional related milestone identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryRequest.PreviousState">
+            <summary>The redacted previous state as JSON.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryRequest.NewState">
+            <summary>The redacted new state as JSON.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryRequest.CorrelationId">
+            <summary>The bounded correlation identifier.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.AuditEntryQuery">
+            <summary>Filters a tenant-scoped audit query.</summary>
+            <param name="ProjectId">The tenant-owned project identifier.</param>
+            <param name="FromUtc">The optional inclusive UTC start time.</param>
+            <param name="ToUtc">The optional inclusive UTC end time.</param>
+            <param name="EventType">The optional event type filter.</param>
+            <param name="PageNumber">The one-based page number.</param>
+            <param name="PageSize">The bounded page size.</param>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.AuditEntryQuery.#ctor(System.Guid,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{TaskBridge.Domain.Enums.MilestoneEventType},System.Int32,System.Int32)">
+            <summary>Filters a tenant-scoped audit query.</summary>
+            <param name="ProjectId">The tenant-owned project identifier.</param>
+            <param name="FromUtc">The optional inclusive UTC start time.</param>
+            <param name="ToUtc">The optional inclusive UTC end time.</param>
+            <param name="EventType">The optional event type filter.</param>
+            <param name="PageNumber">The one-based page number.</param>
+            <param name="PageSize">The bounded page size.</param>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryQuery.ProjectId">
+            <summary>The tenant-owned project identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryQuery.FromUtc">
+            <summary>The optional inclusive UTC start time.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryQuery.ToUtc">
+            <summary>The optional inclusive UTC end time.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryQuery.EventType">
+            <summary>The optional event type filter.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryQuery.PageNumber">
+            <summary>The one-based page number.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryQuery.PageSize">
+            <summary>The bounded page size.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.AuditEntryResponse">
+            <summary>Represents an audit entry response DTO.</summary>
+            <param name="Id">The audit entry identifier.</param>
+            <param name="EventId">The source event identifier.</param>
+            <param name="EventType">The audit event type.</param>
+            <param name="EntityType">The audited entity type.</param>
+            <param name="EntityId">The audited entity identifier.</param>
+            <param name="ActorUserId">The actor identifier.</param>
+            <param name="OrganisationId">The owning organisation identifier.</param>
+            <param name="TimestampUtc">The event timestamp in UTC.</param>
+            <param name="ProjectId">The related tenant-owned project identifier.</param>
+            <param name="MilestoneId">The optional related milestone identifier.</param>
+            <param name="CorrelationId">The correlation identifier.</param>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.AuditEntryResponse.#ctor(System.Guid,System.Guid,TaskBridge.Domain.Enums.MilestoneEventType,System.String,System.Guid,System.Guid,System.Guid,System.DateTime,System.Guid,System.Nullable{System.Guid},System.String)">
+            <summary>Represents an audit entry response DTO.</summary>
+            <param name="Id">The audit entry identifier.</param>
+            <param name="EventId">The source event identifier.</param>
+            <param name="EventType">The audit event type.</param>
+            <param name="EntityType">The audited entity type.</param>
+            <param name="EntityId">The audited entity identifier.</param>
+            <param name="ActorUserId">The actor identifier.</param>
+            <param name="OrganisationId">The owning organisation identifier.</param>
+            <param name="TimestampUtc">The event timestamp in UTC.</param>
+            <param name="ProjectId">The related tenant-owned project identifier.</param>
+            <param name="MilestoneId">The optional related milestone identifier.</param>
+            <param name="CorrelationId">The correlation identifier.</param>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.Id">
+            <summary>The audit entry identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.EventId">
+            <summary>The source event identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.EventType">
+            <summary>The audit event type.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.EntityType">
+            <summary>The audited entity type.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.EntityId">
+            <summary>The audited entity identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.ActorUserId">
+            <summary>The actor identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.OrganisationId">
+            <summary>The owning organisation identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.TimestampUtc">
+            <summary>The event timestamp in UTC.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.ProjectId">
+            <summary>The related tenant-owned project identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.MilestoneId">
+            <summary>The optional related milestone identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.AuditEntryResponse.CorrelationId">
+            <summary>The correlation identifier.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.NotificationQuery">
+            <summary>Filters notifications for one authenticated user.</summary>
+            <param name="PageNumber">The one-based page number.</param>
+            <param name="PageSize">The bounded page size.</param>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.NotificationQuery.#ctor(System.Int32,System.Int32)">
+            <summary>Filters notifications for one authenticated user.</summary>
+            <param name="PageNumber">The one-based page number.</param>
+            <param name="PageSize">The bounded page size.</param>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationQuery.PageNumber">
+            <summary>The one-based page number.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationQuery.PageSize">
+            <summary>The bounded page size.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.NotificationResponse">
+            <summary>Represents a notification response DTO.</summary>
+            <param name="Id">The notification identifier.</param>
+            <param name="EventId">The source event identifier.</param>
+            <param name="RecipientUserId">The authenticated recipient identifier.</param>
+            <param name="OrganisationId">The owning organisation identifier.</param>
+            <param name="EventType">The notification event type.</param>
+            <param name="ProjectId">The related tenant-owned project identifier.</param>
+            <param name="MilestoneId">The optional related milestone identifier.</param>
+            <param name="Title">The safe notification title.</param>
+            <param name="Message">The safe notification message.</param>
+            <param name="IsRead">Whether the notification has been read.</param>
+            <param name="CreatedAtUtc">The creation timestamp in UTC.</param>
+            <param name="ReadAtUtc">The optional read timestamp in UTC.</param>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.NotificationResponse.#ctor(System.Guid,System.Guid,System.Guid,System.Guid,TaskBridge.Domain.Enums.MilestoneEventType,System.Guid,System.Nullable{System.Guid},System.String,System.String,System.Boolean,System.DateTime,System.Nullable{System.DateTime})">
+            <summary>Represents a notification response DTO.</summary>
+            <param name="Id">The notification identifier.</param>
+            <param name="EventId">The source event identifier.</param>
+            <param name="RecipientUserId">The authenticated recipient identifier.</param>
+            <param name="OrganisationId">The owning organisation identifier.</param>
+            <param name="EventType">The notification event type.</param>
+            <param name="ProjectId">The related tenant-owned project identifier.</param>
+            <param name="MilestoneId">The optional related milestone identifier.</param>
+            <param name="Title">The safe notification title.</param>
+            <param name="Message">The safe notification message.</param>
+            <param name="IsRead">Whether the notification has been read.</param>
+            <param name="CreatedAtUtc">The creation timestamp in UTC.</param>
+            <param name="ReadAtUtc">The optional read timestamp in UTC.</param>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.Id">
+            <summary>The notification identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.EventId">
+            <summary>The source event identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.RecipientUserId">
+            <summary>The authenticated recipient identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.OrganisationId">
+            <summary>The owning organisation identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.EventType">
+            <summary>The notification event type.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.ProjectId">
+            <summary>The related tenant-owned project identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.MilestoneId">
+            <summary>The optional related milestone identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.Title">
+            <summary>The safe notification title.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.Message">
+            <summary>The safe notification message.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.IsRead">
+            <summary>Whether the notification has been read.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.CreatedAtUtc">
+            <summary>The creation timestamp in UTC.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Notifications.NotificationResponse.ReadAtUtc">
+            <summary>The optional read timestamp in UTC.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Notifications.NotificationService">
+            <summary>Coordinates tenant- and recipient-scoped notification operations.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.NotificationService.#ctor(TaskBridge.Application.Abstractions.INotificationRepository,TaskBridge.Application.Abstractions.ICurrentUserContext,TaskBridge.Application.Abstractions.IClock,Microsoft.Extensions.Logging.ILogger{TaskBridge.Application.Notifications.NotificationService})">
+            <summary>Initializes the notification service.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.NotificationService.CreateForRecipientsAsync(TaskBridge.Application.Notifications.MilestoneChangedEvent,System.Collections.Generic.IReadOnlyCollection{System.Guid},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.NotificationService.GetForUserAsync(System.Guid,TaskBridge.Application.Notifications.NotificationQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Application.Notifications.NotificationService.MarkAsReadAsync(System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:TaskBridge.Application.Projects.IProjectService">
+            <summary>Provides application operations for projects.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.IProjectService.CreateAsync(TaskBridge.Application.Projects.CreateProjectRequest,System.Threading.CancellationToken)">
+            <summary>Creates a project for the authenticated organisation.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.IProjectService.UpdateStatusAsync(TaskBridge.Application.Projects.UpdateProjectStatusRequest,System.Threading.CancellationToken)">
+            <summary>Updates a project status within the authenticated organisation.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.IProjectService.GetByTeamAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>Gets projects assigned to a team within the authenticated organisation.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.IProjectService.DeleteAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>Deletes a project within the authenticated organisation.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Projects.CreateProjectRequest">
+            <summary>Contains the input needed to create a project.</summary>
+            <param name="TeamId">The team identifier; organisation ownership comes from authenticated context.</param>
+            <param name="Name">The project name.</param>
+            <param name="Description">The optional project description.</param>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.CreateProjectRequest.#ctor(System.Guid,System.String,System.String)">
+            <summary>Contains the input needed to create a project.</summary>
+            <param name="TeamId">The team identifier; organisation ownership comes from authenticated context.</param>
+            <param name="Name">The project name.</param>
+            <param name="Description">The optional project description.</param>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.CreateProjectRequest.TeamId">
+            <summary>The team identifier; organisation ownership comes from authenticated context.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.CreateProjectRequest.Name">
+            <summary>The project name.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.CreateProjectRequest.Description">
+            <summary>The optional project description.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Projects.UpdateProjectStatusRequest">
+            <summary>Contains the input needed to update a project's status.</summary>
+            <param name="ProjectId">The project identifier.</param>
+            <param name="Status">The requested validated status transition.</param>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.UpdateProjectStatusRequest.#ctor(System.Guid,TaskBridge.Domain.Entities.ProjectStatus)">
+            <summary>Contains the input needed to update a project's status.</summary>
+            <param name="ProjectId">The project identifier.</param>
+            <param name="Status">The requested validated status transition.</param>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.UpdateProjectStatusRequest.ProjectId">
+            <summary>The project identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.UpdateProjectStatusRequest.Status">
+            <summary>The requested validated status transition.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Projects.ProjectResponse">
+            <summary>Represents the public project response.</summary>
+            <param name="Id">The project identifier.</param>
+            <param name="OrganisationId">The owning organisation identifier.</param>
+            <param name="TeamId">The assigned team identifier.</param>
+            <param name="Name">The project name.</param>
+            <param name="Description">The optional project description.</param>
+            <param name="Status">The current project status.</param>
+            <param name="CreatedAtUtc">The creation timestamp in UTC.</param>
+            <param name="UpdatedAtUtc">The last update timestamp in UTC.</param>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.ProjectResponse.#ctor(System.Guid,System.Guid,System.Guid,System.String,System.String,TaskBridge.Domain.Entities.ProjectStatus,System.DateTime,System.DateTime)">
+            <summary>Represents the public project response.</summary>
+            <param name="Id">The project identifier.</param>
+            <param name="OrganisationId">The owning organisation identifier.</param>
+            <param name="TeamId">The assigned team identifier.</param>
+            <param name="Name">The project name.</param>
+            <param name="Description">The optional project description.</param>
+            <param name="Status">The current project status.</param>
+            <param name="CreatedAtUtc">The creation timestamp in UTC.</param>
+            <param name="UpdatedAtUtc">The last update timestamp in UTC.</param>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.ProjectResponse.Id">
+            <summary>The project identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.ProjectResponse.OrganisationId">
+            <summary>The owning organisation identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.ProjectResponse.TeamId">
+            <summary>The assigned team identifier.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.ProjectResponse.Name">
+            <summary>The project name.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.ProjectResponse.Description">
+            <summary>The optional project description.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.ProjectResponse.Status">
+            <summary>The current project status.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.ProjectResponse.CreatedAtUtc">
+            <summary>The creation timestamp in UTC.</summary>
+        </member>
+        <member name="P:TaskBridge.Application.Projects.ProjectResponse.UpdatedAtUtc">
+            <summary>The last update timestamp in UTC.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Projects.ProjectService">
+            <summary>Coordinates project business operations for the authenticated organisation.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.ProjectService.#ctor(TaskBridge.Application.Abstractions.IProjectRepository,TaskBridge.Application.Abstractions.ICurrentUserContext,TaskBridge.Application.Abstractions.IClock,FluentValidation.IValidator{TaskBridge.Application.Projects.CreateProjectRequest},FluentValidation.IValidator{TaskBridge.Application.Projects.UpdateProjectStatusRequest},Microsoft.Extensions.Logging.ILogger{TaskBridge.Application.Projects.ProjectService},TaskBridge.Application.Notifications.IMilestoneEventHandler)">
+            <summary>Initializes the project service.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.ProjectService.CreateAsync(TaskBridge.Application.Projects.CreateProjectRequest,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Application.Projects.ProjectService.UpdateStatusAsync(TaskBridge.Application.Projects.UpdateProjectStatusRequest,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Application.Projects.ProjectService.GetByTeamAsync(System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Application.Projects.ProjectService.DeleteAsync(System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:TaskBridge.Application.Projects.CreateProjectRequestValidator">
+            <summary>Validates project creation input.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.CreateProjectRequestValidator.#ctor">
+            <summary>Initializes the project creation validation rules.</summary>
+        </member>
+        <member name="T:TaskBridge.Application.Projects.UpdateProjectStatusRequestValidator">
+            <summary>Validates project status update input.</summary>
+        </member>
+        <member name="M:TaskBridge.Application.Projects.UpdateProjectStatusRequestValidator.#ctor">
+            <summary>Initializes the project status validation rules.</summary>
+        </member>
+    </members>
+</doc>

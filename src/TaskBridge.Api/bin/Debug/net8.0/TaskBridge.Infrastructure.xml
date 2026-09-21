@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TaskBridge.Infrastructure</name>
+    </assembly>
+    <members>
+        <member name="T:TaskBridge.Infrastructure.Persistence.Configurations.AuditEntryConfiguration">
+            <summary>Configures immutable audit entry persistence.</summary>
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Persistence.Configurations.AuditEntryConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{TaskBridge.Domain.Entities.AuditEntry})">
+            <inheritdoc />
+        </member>
+        <member name="T:TaskBridge.Infrastructure.Persistence.Configurations.NotificationConfiguration">
+            <summary>Configures tenant-scoped notification persistence.</summary>
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Persistence.Configurations.NotificationConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{TaskBridge.Domain.Entities.Notification})">
+            <inheritdoc />
+        </member>
+        <member name="T:TaskBridge.Infrastructure.Persistence.Migrations.AddActorIpAddressToAuditEntries">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Persistence.Migrations.AddActorIpAddressToAuditEntries.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Persistence.Migrations.AddActorIpAddressToAuditEntries.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Persistence.Migrations.AddActorIpAddressToAuditEntries.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext">
+            <summary>EF Core database context for TaskBridge.</summary>
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext})">
+            <summary>Initializes the database context.</summary>
+        </member>
+        <member name="P:TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext.Projects">
+            <summary>Gets the projects table.</summary>
+        </member>
+        <member name="P:TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext.AuditEntries">
+            <summary>Gets the immutable audit entries table.</summary>
+        </member>
+        <member name="P:TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext.Notifications">
+            <summary>Gets the notifications table.</summary>
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext.TaskBridge#Application#Abstractions#IUnitOfWork#SaveChangesAsync(System.Threading.CancellationToken)">
+            <summary>Commits the current application unit of work.</summary>
+        </member>
+        <member name="T:TaskBridge.Infrastructure.Repositories.AuditEntryRepository">
+            <summary>Persists append-only audit entries with organisation-scoped queries.</summary>
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.AuditEntryRepository.#ctor(TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext)">
+            <summary>Initializes the audit entry repository.</summary>
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.AuditEntryRepository.AddAsync(TaskBridge.Domain.Entities.AuditEntry,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.AuditEntryRepository.ExistsByEventIdAsync(System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.AuditEntryRepository.GetByEventIdAsync(System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.AuditEntryRepository.QueryAsync(System.Guid,TaskBridge.Application.Notifications.AuditEntryQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:TaskBridge.Infrastructure.Repositories.NotificationRepository">
+            <summary>Persists notifications with organisation and recipient scoping.</summary>
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.NotificationRepository.#ctor(TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext)">
+            <summary>Initializes the notification repository.</summary>
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.NotificationRepository.AddAsync(TaskBridge.Domain.Entities.Notification,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.NotificationRepository.ExistsByEventIdAndRecipientAsync(System.Guid,System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.NotificationRepository.QueryAsync(System.Guid,System.Guid,TaskBridge.Application.Notifications.NotificationQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.NotificationRepository.GetForRecipientAsync(System.Guid,System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:TaskBridge.Infrastructure.Repositories.ProjectRepository">
+            <summary>Persists projects through EF Core with organisation-scoped queries.</summary>
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.ProjectRepository.#ctor(TaskBridge.Infrastructure.Persistence.TaskBridgeDbContext)">
+            <summary>Initializes the project repository.</summary>
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.ProjectRepository.AddAsync(TaskBridge.Domain.Entities.Project,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.ProjectRepository.GetByIdAsync(System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.ProjectRepository.GetByTeamAsync(System.Guid,System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.ProjectRepository.Remove(TaskBridge.Domain.Entities.Project)">
+            <inheritdoc />
+        </member>
+        <member name="M:TaskBridge.Infrastructure.Repositories.ProjectRepository.SaveChangesAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:TaskBridge.Infrastructure.Time.SystemClock">
+            <summary>Provides the system UTC clock.</summary>
+        </member>
+        <member name="P:TaskBridge.Infrastructure.Time.SystemClock.UtcNow">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
